@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+<head>
+    <title>Congre.us - Houston's Town Hall System</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+    <style>
+        body        { padding-top:20px; word-wrap:break-word; background: url(http://cdn.backgroundhost.com/backgrounds/subtlepatterns/gplaypattern.png); }
+        .right      {float: right;}
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- Header -->
+    <nav class="navbar navbar-default">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Congre.us - Houston's Town Hall System</a>
+        </div>
+
+        <!-- Link to angular pages -->
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="/login">Login</a></li>
+            <li><a href="/signup">Signup</a></li>
+        </ul>
+    </nav>
+
+    <div class="page-header text-center">
+        <h1><span class="fa fa-list"></span> Meeting Listing</h1>
+        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+        <a href="/createmeeting" class="btn btn-default btn-sm">Create Meeting</a>
+    </div>
+
+    <div class="row">
+
+        <!-- User info -->
+        <div class="col-sm-6 col-sm-offset-3 col-xs-12 col-xs-offset-0">
+            <div class="well">
+                <h3><span class="fa fa-user"></span> User Information</h3>
+
+                    <p>
+                        <strong>id</strong>: <%= user._id %><br>
+                        <strong>email</strong>: <%= user.local.email %><br>
+                        <strong>name</strong>: <%= user.name %>
+                    </p>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        
+        <div id="meeting_attach" class="col-sm-12">
+
+            <script type="text/javascript">
+                $.getJSON( "/meetings/list", function(data) {
+                    
+                    function comp(a, b) {
+                        return new Date(a.date) - new Date(b.date);
+                    }
+                    //sort the array
+                    data.sort(comp);
+
+
+                    var output = "";
+                    for(var i in data) {
+                        var unformattedDate = new Date(data[i].date);
+
+                        var d = unformattedDate.getDate();
+                        var m = unformattedDate.getMonth();
+                        m++;
+                        var y = unformattedDate.getFullYear();
+
+
+                        if(data[i].location.length === 0)
+                            data[i].location = "Houston";
+
+                        output += "<div class=\"well\">" 
+                        + "<div class=\"row\">"
+                        
+                        + "<div class=\"col-xs-12 col-sm-7\">"
+                        + "<h2>" + data[i].name + "</h2>"
+                        + "<h3>" + d + "/" + m + "/" + y + "</h3>"
+                        + "<h4>" + data[i].description + "</h4>"
+
+                        + "<div class=\"row\">"
+                            + "<div class=\"col-xs-6 text-center\">"
+                                + "<form action=\"/meetings/register\" method=\"post\">"
+                                + "<div class=\"form-group\">"
+                                + "<input type=\"hidden\" name=\"userid\" value=\"<%= user._id %>\" >"
+                                + "<input type=\"hidden\" name =\"eventid\" value=\"" + data[i]._id + "\">" + "</div>"
+                                + "<button type=\"submit\" class=\"btn btn-info\">Remind Me!</button>"
+                                + "</form>"
+                            + "</div>"
+                            + "<div class=\"col-xs-6 text-center\">"
+                                + "<form action=\"/meetings/notify\" method=\"post\">"
+                                + "<div class=\"form-group\">"
+                                + "<input type=\"hidden\" name =\"eventid\" value=\"" + data[i]._id + "\">" + "</div>"
+                                + "<button type=\"submit\" class=\"btn btn-info\">Alert All Users!</button>"
+                                + "</form>"
+
+                            + "</div>"
+                        + "</div>" + "<br>"
+
+                        + "</div>"
+                        
+                        + "<div class=\"col-xs-12 col-sm-5 text-center\">"
+                        + "<iframe width=\"250\" height=\"250\" frameborder=\"0\" style=\"border:0\" src=\"https://www.google.com/maps/embed/v1/place?key=<API KEY>&q=" + data[i].location + "\"></iframe>"
+                        + "</div>"
+
+                        + "</div>"
+                        + "</div>";
+                    }
+
+                    document.getElementById("meeting_attach").innerHTML = output;
+                })
+            </script>
+
+        </div>
+        
+    </div>
+
+
+</div>
+</body>
+</html>
