@@ -21,3 +21,5 @@ Runs on Node/Express/Mongodb, using Google Maps API for mapping elements.
 * Upgraded security and anti-spam email checks
 
 ###### Thanks for checking out my submission!
+
+> Built for the City of Houston Open Challenge
