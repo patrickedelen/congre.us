@@ -1,7 +1,7 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Congre.us - Houston's Town Hall System</title>
+    <title>Congre.us - town hall for us</title>
     <!-- load bootstrap and font-awesome -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> 
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> 
@@ -31,62 +31,23 @@
         
         <div id="meeting_attach" class="col-sm-8">
 
-            <script type="text/javascript">
-                $.getJSON( "/meetings/list", function(data) {
-                    
-                    function comp(a, b) {
-                        return new Date(a.date) - new Date(b.date);
-                    }
-                    //sort the array
-                    data.sort(comp);
-
-
-                    var output = "";
-                    for(var i in data) {
-                        var unformattedDate = new Date(data[i].date);
-
-                        var d = unformattedDate.getDate();
-                        var m = unformattedDate.getMonth();
-                        m++;
-                        var y = unformattedDate.getFullYear();
-
-
-                        if(data[i].location.length === 0)
-                            data[i].location = "Houston";
-
-                        output += "<div class=\"well\">" 
-                        + "<div class=\"row\">"
-                        
-                        + "<div class=\"col-xs-12 col-sm-7\">"
-                        + "<h2>" + data[i].name + "</h2>"
-                        + "<h3>" + m + "/" + d + "/" + y + "</h3>"
-                        + "<h4>" + data[i].description + "</h4>"
-
-                        + "<form action=\"/meetings/registeremail\" method=\"post\">"
-                        + "<div class=\"form-group\">"
-                        + "<input type=\"text\" class=\"form-control\" name=\"email\" placeholder=\"Enter your email to be alerted\">"
-                        + "<input type=\"hidden\" name =\"eventid\" value=\"" + data[i]._id + "\">" + "</div>"
-                        + "<button type=\"submit\" class=\"btn btn-info\">Submit</button>"
-                        + "</form>"
-
-                        + "</div>"
-                        
-                        + "<div class=\"col-xs-12 col-sm-5 text-center\">"
-                        + "<iframe width=\"250\" height=\"250\" frameborder=\"0\" style=\"border:0\" src=\"https://www.google.com/maps/embed/v1/place?key=AIzaSyD8CQTuTM5wAf3ahyaHk53zccZwCOL9mcU&q=" + data[i].location + "\"></iframe>"
-                        + "</div>"
-
-                        + "</div>"
-                        + "</div>";
-                    }
-
-                    document.getElementById("meeting_attach").innerHTML = output;
-                })
-            </script>
+            
 
         </div>
         <div id="map" class="col-sm-4">
             
         </div>
+            <script>
+              var map;
+              function initMap() {
+                map = new google.maps.Map(document.getElementById('map'), {
+                  center: {lat: 29.711, lng: -95.342},
+                  zoom: 8
+                });
+              }
+            </script>
+            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMp-R8qLlYPsCx6QLsxl_UXZlA9_Hdlog&callback=initMap"
+            async defer></script>
         
     </div>
 
