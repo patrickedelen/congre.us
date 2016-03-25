@@ -44,6 +44,28 @@
                   center: {lat: 29.711, lng: -95.342},
                   zoom: 8
                 });
+
+                $.getJSON( "/meetings/list", function(data) {
+                    
+                    function comp(a, b) {
+                        return new Date(a.date) - new Date(b.date);
+                    }
+                    //sort the array
+                    data.sort(comp);
+                    
+                    for(var i in data) {
+                        console.log(data[i].location)
+                        if(data[i].location){
+                            $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?address="+data[i].location+"&key=AIzaSyBMp-R8qLlYPsCx6QLsxl_UXZlA9_Hdlog", function(output) {
+                                console.log(output);
+                            });
+                        } else {
+                            $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?address="+Houston+"&key=AIzaSyBMp-R8qLlYPsCx6QLsxl_UXZlA9_Hdlog", function(output) {
+                                console.log(output);
+                            });
+                        }
+                    }
+                })
               }
             </script>
             <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMp-R8qLlYPsCx6QLsxl_UXZlA9_Hdlog&callback=initMap"
