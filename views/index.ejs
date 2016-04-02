@@ -44,6 +44,7 @@
                   center: {lat: 29.711, lng: -95.342},
                   zoom: 8
                 });
+                geocoder = new google.maps.Geocoder();
 
                 $.getJSON( "/meetings/list", function(data) {
                     
@@ -54,7 +55,7 @@
                     data.sort(comp);
                     
                     for(var i in data) {
-                        console.log(data[i].location)
+                        console.log(data[i].location);
                         if(data[i].location){
                             $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?address="+data[i].location+"&key=AIzaSyBMp-R8qLlYPsCx6QLsxl_UXZlA9_Hdlog", function(output) {
                                 console.log(output);
@@ -64,8 +65,34 @@
                                 console.log(output);
                             });
                         }
+                        // using google maps geocoder instead of http request, will need to 
+                        if(data[i].location){
+                            geocoder.geocode({'address': data[i].location}, function(geo, status) {
+                                if(status == google.maps.GeocoderStatus.OK) {
+                                    var marker = new google.maps.Marker({
+                                        map: map,
+                                        position: geo[0].geometry.location,
+                                        title: i
+                                    });
+                                } else {
+                                    alert("Geocode failed with exception: " + status);
+                                }
+                            });
+                        } else {
+                            geocoder.geocode({'address': 'Houston'}, function(geo, status) {
+                                if(status == google.maps.GeocoderStatus.OK) {
+                                    var marker = new google.maps.Marker({
+                                        map: map,
+                                        position: geo[0].geometry.location
+                                    });
+                                } else {
+                                    alert("Geocode failed with exception: " + status);
+                                }
+                            });
+
+                        }
                     }
-                })
+                });
               }
             </script>
             <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMp-R8qLlYPsCx6QLsxl_UXZlA9_Hdlog&callback=initMap"
