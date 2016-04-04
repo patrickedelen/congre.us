@@ -1,5 +1,6 @@
 body { 
 	background: url(gplaypattern.png);
+	overflow-y: hidden;
 }
 
 .row-fluid{ 
@@ -57,7 +58,8 @@ header{
 }
 
 #meeting_attach {
-	overflow-y: hidden;
+	height: 900px;
+	overflow-y: scroll;
 }
 
 

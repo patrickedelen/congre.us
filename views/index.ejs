@@ -30,7 +30,54 @@
     <div id="main_container" class="row row-fluid">
         
         <div id="meeting_attach" class="col-sm-8">
+            <script type="text/javascript">
+                $.getJSON( "/meetings/list", function(data) {
+                    
+                    function comp(a, b) {
+                        return new Date(a.date) - new Date(b.date);
+                    }
+                    //sort the array
+                    data.sort(comp);
 
+
+                    var output = "";
+                    for(var i in data) {
+                        var unformattedDate = new Date(data[i].date);
+
+                        var d = unformattedDate.getDate();
+                        var m = unformattedDate.getMonth();
+                        m++;
+                        var y = unformattedDate.getFullYear();
+
+
+                        if(data[i].location.length === 0)
+                            data[i].location = "Houston";
+
+                        output += "<div class=\"well\">" 
+                        + "<div class=\"row\">"
+                        
+                        + "<div class=\"col-xs-12\">"
+                        + "<h2>" + data[i].name + "</h2>"
+                        + "<h3>" + m + "/" + d + "/" + y + "</h3>"
+                        + "<h4>" + data[i].description + "</h4>"
+
+                        + "<form action=\"/meetings/registeremail\" method=\"post\">"
+                        + "<div class=\"form-group\">"
+                        + "<input type=\"text\" class=\"form-control\" name=\"email\" placeholder=\"Enter your email to be alerted\">"
+                        + "<input type=\"hidden\" name =\"eventid\" value=\"" + data[i]._id + "\">" + "</div>"
+                        + "<button type=\"submit\" class=\"btn btn-info\">Submit</button>"
+                        + "</form>"
+
+                        + "</div>"
+                        
+
+                        + "</div>"
+                        + "</div>";
+                    }
+
+                    document.getElementById("meeting_attach").innerHTML = output;
+                })
+            </script>
             
 
         </div>
@@ -42,7 +89,7 @@
               function initMap() {
                 map = new google.maps.Map(document.getElementById('map'), {
                   center: {lat: 29.711, lng: -95.342},
-                  zoom: 8
+                  zoom: 12
                 });
                 geocoder = new google.maps.Geocoder();
 
