@@ -28,6 +28,18 @@ var client = require('twilio')(accountSid, authToken);
 // EMAIL AND TEXTING SETUP END
 /////////////////////////////////////////////////////////////////////
 
+// SETUP GEOCODER
+var geocoderProvider = 'google';
+var httpAdapter = 'http';
+// optional
+var extra = {
+    apiKey: 'AIzaSyBMp-R8qLlYPsCx6QLsxl_UXZlA9_Hdlog', 
+    formatter: null         
+};
+
+var geocoder = require('node-geocoder')(geocoderProvider, httpAdapter, extra);
+// GEOCODER END
+
 
 module.exports = function(app, passport) {
 
@@ -102,6 +114,17 @@ module.exports = function(app, passport) {
 		event.description = req.body.description;
 		event.textalert = req.body.textalert;
 		event.emailalert = req.body.emailalert;
+
+		//add the lon and lat
+		geocoder.geocode(req.body.location)
+			.then(function(res) {
+				event.latitude = res[0];
+				event.longitude = res[1];
+			})
+			.catch(function(err){
+				console.log(err);
+			});
+
 
 		event.save(function(err) {
 			if(err)
